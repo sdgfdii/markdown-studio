@@ -54,7 +54,8 @@ function readStored(key: string, fallback: string): string {
   }
 }
 
-function countWords(text: string): number {
+// 中文按字、西文按词计，用于估算阅读时长（300 单位/分钟）
+function countReadableUnits(text: string): number {
   const cjk = text.match(/[\u4e00-\u9fa5\u3040-\u30ff]/g)?.length ?? 0
   const latin = text.match(/[A-Za-z0-9_'-]+/g)?.length ?? 0
   return cjk + latin
@@ -92,12 +93,11 @@ export default function App() {
   const html = useMemo(() => DOMPurify.sanitize(marked.parse(source) as string), [source])
 
   const stats = useMemo(() => {
-    const words = countWords(source)
+    const units = countReadableUnits(source)
     return {
       chars: source.length,
-      words,
       lines: source ? source.split('\n').length : 0,
-      minutes: Math.max(1, Math.round(words / 300)),
+      minutes: Math.max(1, Math.round(units / 300)),
     }
   }, [source])
 
@@ -226,7 +226,6 @@ export default function App() {
       <footer className="statusbar">
         <span>{stats.lines} 行</span>
         <span>{stats.chars} 字符</span>
-        <span>{stats.words} 词</span>
         <span>约 {stats.minutes} 分钟读完</span>
         <span className="spacer" />
         <span className="muted">内容保存在本地浏览器</span>
