@@ -411,9 +411,22 @@ textarea::placeholder {
   border-radius: 8px;
 }
 
+/* GFM 任务列表：去掉重复的项目符号，只保留复选框 */
+.markdown-body li:has(> input[type='checkbox']) {
+  list-style: none;
+  margin-left: -0.15em;
+}
+
+.markdown-body ul:has(> li > input[type='checkbox']) {
+  padding-left: 0.5em;
+}
+
 .markdown-body input[type='checkbox'] {
   accent-color: var(--accent);
-  margin-right: 6px;
+  margin-right: 8px;
+  width: 13px;
+  height: 13px;
+  vertical-align: -1px;
 }
 
 /* ---------- 状态栏 ---------- */
